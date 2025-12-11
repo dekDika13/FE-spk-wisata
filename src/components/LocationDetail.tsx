@@ -27,7 +27,7 @@ const LocationDetail: React.FC<LocationDetailProps> = ({ location, isOpen, onClo
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [usernames, setUsernames] = useState<Record<number, string>>({});
-  
+
   const { getRatingsByLocationId, addRating } = useWisata();
   const { user, isAuthenticated } = useApiAuth();
 
@@ -39,7 +39,7 @@ const LocationDetail: React.FC<LocationDetailProps> = ({ location, isOpen, onClo
 
   const loadReviews = async () => {
     if (!location) return;
-    
+
     setIsLoadingReviews(true);
     try {
       const allReviews = await reviewAPI.getAll();
@@ -48,24 +48,7 @@ const LocationDetail: React.FC<LocationDetailProps> = ({ location, isOpen, onClo
         review => review.destination_id.toString() === location.id
       );
       setReviews(destinationReviews);
-      
-      // Load usernames for each review
-      const uniqueUserIds = [...new Set(destinationReviews.map(r => r.user_id))] as number[];
-      const usernameMap: Record<number, string> = {};
-      
-      await Promise.all(
-        uniqueUserIds.map(async (userId: number) => {
-          try {
-            const userResponse = await authAPI.getUserById(userId);
-            usernameMap[userId] = userResponse.data?.username || `User ${userId}`;
-          } catch (error) {
-            console.error(`Failed to load user ${userId}:`, error);
-            usernameMap[userId] = `User ${userId}`;
-          }
-        })
-      );
-      
-      setUsernames(usernameMap);
+
     } catch (error) {
       console.error('Failed to load reviews:', error);
       setReviews([]);
@@ -78,7 +61,7 @@ const LocationDetail: React.FC<LocationDetailProps> = ({ location, isOpen, onClo
 
   const locationRatings = getRatingsByLocationId(location.id);
   const userRating = locationRatings.find(r => r.userId === user?.id);
-  
+
   // Prepare gallery images (main image + gallery)
   const allImages = [location.mainImage, ...location.gallery].filter(Boolean);
 
@@ -122,16 +105,15 @@ const LocationDetail: React.FC<LocationDetailProps> = ({ location, isOpen, onClo
   const renderStars = (currentRating: number, interactive = false) => {
     return Array.from({ length: 5 }, (_, index) => {
       const starValue = index + 1;
-      const isActive = interactive ? 
+      const isActive = interactive ?
         (hoveredStar >= starValue || (!hoveredStar && rating >= starValue)) :
         currentRating >= starValue;
 
       return (
         <Star
           key={index}
-          className={`w-5 h-5 cursor-pointer ${
-            isActive ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-          }`}
+          className={`w-5 h-5 cursor-pointer ${isActive ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+            }`}
           onClick={interactive ? () => setRating(starValue) : undefined}
           onMouseEnter={interactive ? () => setHoveredStar(starValue) : undefined}
           onMouseLeave={interactive ? () => setHoveredStar(0) : undefined}
@@ -166,8 +148,8 @@ const LocationDetail: React.FC<LocationDetailProps> = ({ location, isOpen, onClo
             </div>
             <div className="grid grid-cols-2 gap-2">
               {location.gallery.slice(0, 4).map((image, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="relative group cursor-pointer overflow-hidden rounded-lg"
                   onClick={() => openGallery(index + 1)}
                 >
@@ -303,9 +285,8 @@ const LocationDetail: React.FC<LocationDetailProps> = ({ location, isOpen, onClo
                             return (
                               <Star
                                 key={index}
-                                className={`w-4 h-4 ${
-                                  isActive ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                                }`}
+                                className={`w-4 h-4 ${isActive ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                                  }`}
                               />
                             );
                           })}

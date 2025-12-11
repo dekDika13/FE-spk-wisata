@@ -162,14 +162,14 @@ const AdminPage: React.FC = () => {
       <Tabs defaultValue="locations" className="space-y-6">
         <TabsList>
           <TabsTrigger value="locations">Daftar Tempat Wisata</TabsTrigger>
-          <TabsTrigger value="pending" className="relative">
+          {/* <TabsTrigger value="pending" className="relative">
             Pengajuan Baru
             {pendingLocations.length > 0 && (
               <Badge className="ml-2 bg-destructive text-destructive-foreground text-xs px-1.5 py-0.5 rounded-full">
                 {pendingLocations.length}
               </Badge>
             )}
-          </TabsTrigger>
+          </TabsTrigger> */}
         </TabsList>
 
         {/* Daftar Tempat Wisata */}

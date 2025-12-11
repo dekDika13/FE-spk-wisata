@@ -37,7 +37,7 @@ interface WisataFormFieldsProps {
 const WisataFormFields: React.FC<WisataFormFieldsProps> = ({
   formData,
   onInputChange,
-  categories,
+  // categories,
   isAdmin,
   onSubmit,
   onCancel,
@@ -58,7 +58,7 @@ const WisataFormFields: React.FC<WisataFormFieldsProps> = ({
           />
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label htmlFor="category">Kategori *</Label>
           <Select value={formData.category} onValueChange={(value) => onInputChange('category', value)}>
             <SelectTrigger>
@@ -72,10 +72,10 @@ const WisataFormFields: React.FC<WisataFormFieldsProps> = ({
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
       </div>
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <Label htmlFor="shortDescription">Deskripsi Singkat</Label>
         <Textarea
           id="shortDescription"
@@ -84,7 +84,7 @@ const WisataFormFields: React.FC<WisataFormFieldsProps> = ({
           placeholder="Deskripsi singkat untuk card"
           rows={2}
         />
-      </div>
+      </div> */}
 
       <div className="space-y-2">
         <Label htmlFor="fullDescription">Deskripsi Lengkap *</Label>
@@ -136,7 +136,7 @@ const WisataFormFields: React.FC<WisataFormFieldsProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label htmlFor="openingHours">Jam Operasional</Label>
           <Input
             id="openingHours"
@@ -144,7 +144,7 @@ const WisataFormFields: React.FC<WisataFormFieldsProps> = ({
             onChange={(e) => onInputChange('openingHours', e.target.value)}
             placeholder="08:00 - 18:00"
           />
-        </div>
+        </div> */}
 
         <div className="space-y-2">
           <Label htmlFor="ticketPrice">Harga Tiket (Rp) *</Label>
@@ -226,7 +226,7 @@ const WisataFormFields: React.FC<WisataFormFieldsProps> = ({
         </div>
       )}
 
-      {isAdmin && (
+      {/* {isAdmin && (
         <div className="space-y-2">
           <Label htmlFor="status">Status</Label>
           <Select value={formData.status} onValueChange={(value) => onInputChange('status', value)}>
@@ -240,7 +240,7 @@ const WisataFormFields: React.FC<WisataFormFieldsProps> = ({
             </SelectContent>
           </Select>
         </div>
-      )}
+      )} */}
 
       <div className="flex justify-end space-x-4">
         <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>

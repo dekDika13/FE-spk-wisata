@@ -47,10 +47,10 @@ const WisataCard: React.FC<WisataCardProps> = ({ location, onViewDetails }) => {
           <h3 className="font-bold text-lg text-gray-900 line-clamp-1">
             {location.name}
           </h3>
-          <div className="flex items-center space-x-1 text-sm">
+          {/* <div className="flex items-center space-x-1 text-sm">
             <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
             <span className="font-medium">{location.averageRating.toFixed(1)}</span>
-          </div>
+          </div> */}
         </div>
         
         <div className="flex items-center text-sm text-gray-600">
@@ -65,10 +65,10 @@ const WisataCard: React.FC<WisataCardProps> = ({ location, onViewDetails }) => {
         </p>
         
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center text-sm text-gray-500">
+          {/* <div className="flex items-center text-sm text-gray-500">
             <Users className="w-4 h-4 mr-1" />
             <span>{location.totalReviews} ulasan</span>
-          </div>
+          </div> */}
           <div className="text-bali-ocean font-bold">
             {formatPrice(location.ticketPrice)}
           </div>

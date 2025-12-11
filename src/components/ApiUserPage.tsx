@@ -12,17 +12,27 @@ import ApiReviewSection from './ApiReviewSection';
 
 const ApiUserPage: React.FC = () => {
   const [selectedLocation, setSelectedLocation] = useState<WisataLocation | null>(null);
-  const { destinations, isLoading, loadDestinations, getFilteredDestinations, searchTerm,
-  setSearchTerm,
-  selectedCategory,
-  setSelectedCategory } = useApiDestinations();
+  const destinations = useApiDestinations((state) => state.destinations);
+  const isLoading = useApiDestinations((state) => state.isLoading);
+  const searchTerm = useApiDestinations((state) => state.searchTerm);
+  const selectedCategory = useApiDestinations((state) => state.selectedCategory);
+  const loadDestinations = useApiDestinations((state) => state.loadDestinations);
 
   useEffect(() => {
     console.log('ApiUserPage: Loading destinations...');
     loadDestinations();
-  }, []);
+  }, [loadDestinations]);
 
-  const filteredLocations = getFilteredDestinations();
+  // Filter destinations based on search term and category
+  const filteredLocations = React.useMemo(() => {
+    return destinations.filter(destination => {
+      const matchesSearch = destination.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           destination.shortDescription.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = !selectedCategory || destination.category === selectedCategory;
+      
+      return matchesSearch && matchesCategory;
+    }).sort((a, b) => (b.mabacScore || 0) - (a.mabacScore || 0));
+  }, [destinations, searchTerm, selectedCategory]);
   console.log('ApiUserPage: Filtered locations:', filteredLocations);
   console.log('ApiUserPage: Is loading:', isLoading);
   console.log('ApiUserPage: Total destinations:', destinations.length);

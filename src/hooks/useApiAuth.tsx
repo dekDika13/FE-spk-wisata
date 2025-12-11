@@ -12,6 +12,7 @@ interface ApiUser {
   photo?: string;
   bod?: string;
   role: number | 'user' | 'admin';
+  created_at: string;
 }
 
 interface ApiAuthState {
@@ -91,6 +92,7 @@ export const useApiAuth = create<ApiAuthState>((set, get) => ({
         photo: profileData.photo || '',
         bod: profileData.bod,
         role: profileData.role || (decodedToken?.role === 1 ? 1 : 2), // Use numeric role from API
+        created_at: profileData.created_at || new Date().toISOString(),
       };
       
       console.log('Setting user:', user);

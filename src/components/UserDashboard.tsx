@@ -7,7 +7,7 @@ import { Star, MapPin, Calendar, Award, MessageSquare } from 'lucide-react';
 import { useApiAuth } from '@/hooks/useApiAuth';
 import { reviewAPI, ReviewDTO } from '@/services/api';
 
-interface UserDashboardProps {}
+interface UserDashboardProps { }
 // --- Diambil dari ApiReviewSection ---
 // Mendefinisikan struktur kriteria rating
 interface ReviewCriteria {
@@ -29,18 +29,18 @@ const CRITERIA: ReviewCriteria[] = [
 const UserDashboard: React.FC<UserDashboardProps> = () => {
   const auth = useApiAuth();
   const { user } = auth;
-const [reviews, setReviews] = useState<any[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadReviews = async () => {
       if (!user) return;
-      
+
       try {
         setLoading(true);
         const allReviews = await reviewAPI.getAll();
         // Filter reviews untuk user yang sedang login
-        
+
         setReviews(allReviews);
       } catch (error) {
         console.error('Error loading reviews:', error);
@@ -54,7 +54,7 @@ const [reviews, setReviews] = useState<any[]>([]);
   }, [user]);
 
   if (!user) return null;
-// --- Diambil dan disesuaikan dari ApiReviewSection ---
+  // --- Diambil dan disesuaikan dari ApiReviewSection ---
   const calculateAverageRating = (review: ReviewDTO) => {
     const total = review.rating_c1 + review.rating_c2 + review.rating_c4 + review.rating_c6 + review.rating_c7;
     return (total / 5).toFixed(1);
@@ -66,9 +66,8 @@ const [reviews, setReviews] = useState<any[]>([]);
         {Array.from({ length: 10 }, (_, index) => (
           <div
             key={index}
-            className={`w-2 h-2 rounded-full ${
-              rating >= index + 1 ? 'bg-yellow-400' : 'bg-gray-300'
-            }`}
+            className={`w-2 h-2 rounded-full ${rating >= index + 1 ? 'bg-yellow-400' : 'bg-gray-300'
+              }`}
           />
         ))}
       </div>
@@ -83,9 +82,9 @@ const [reviews, setReviews] = useState<any[]>([]);
 
   // Get join date
 
-  
+
   // Get join date
-  const joinDate = new Date().toISOString();
+  //const joinDate = new Date().toISOString();
 
   return (
     <div className="space-y-6">
@@ -98,7 +97,7 @@ const [reviews, setReviews] = useState<any[]>([]);
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 " >
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Rating</CardTitle>
@@ -111,24 +110,12 @@ const [reviews, setReviews] = useState<any[]>([]);
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Rata-rata Rating</CardTitle>
-            <Award className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {userAverageRating> 0 ? userAverageRating.toFixed(1) : '-'}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Bergabung Sejak</CardTitle>
             <Calendar className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {new Date(joinDate).toLocaleDateString('id-ID', {
+              {new Date(user.created_at).toLocaleDateString('id-ID', {
                 month: 'short',
                 year: 'numeric'
               })}
@@ -176,7 +163,7 @@ const [reviews, setReviews] = useState<any[]>([]);
             <div>
               <label className="text-sm font-medium text-gray-500">Bergabung Sejak</label>
               <p className="text-lg">
-                {new Date(joinDate).toLocaleDateString('id-ID', {
+                {new Date(user.created_at).toLocaleDateString('id-ID', {
                   day: 'numeric',
                   month: 'long',
                   year: 'numeric'
@@ -191,8 +178,8 @@ const [reviews, setReviews] = useState<any[]>([]);
         </CardContent>
       </Card>
 
-     
-{/* --- BAGIAN YANG DIUBAH --- */}
+
+      {/* --- BAGIAN YANG DIUBAH --- */}
       <Card>
         <CardHeader>
           <CardTitle>Ulasan Anda ({reviews.length})</CardTitle>
@@ -235,7 +222,7 @@ const [reviews, setReviews] = useState<any[]>([]);
                       </div>
                     ))}
                   </div>
-                  
+
                   {review.review_detail && (
                     <p className="text-gray-700 leading-relaxed italic">"{review.review_detail}"</p>
                   )}
@@ -252,8 +239,8 @@ const [reviews, setReviews] = useState<any[]>([]);
         </CardContent>
       </Card>
 
-       
-      
+
+
     </div>
   );
 };

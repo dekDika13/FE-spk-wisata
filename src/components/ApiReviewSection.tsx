@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Star, MessageSquare } from 'lucide-react';
+import { Star, MessageSquare, Edit2 } from 'lucide-react';
 import { reviewAPI } from '@/services/api';
 import { useApiAuth } from '@/hooks/useApiAuth';
 import { toast } from 'sonner';
@@ -56,13 +56,36 @@ const ApiReviewSection: React.FC<ReviewSectionProps> = ({ locationId }) => {
     c6: 0,
     c7: 0
   });
-  const [hoveredRating, setHoveredRating] = useState<Record<string, number>>({});
+ const [hoveredRating, setHoveredRating] = useState<Record<string, number>>({});
+  const [existingReview, setExistingReview] = useState<any>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
   
   const { user, isAuthenticated } = useApiAuth();
 
   useEffect(() => {
     loadReviews();
   }, []);
+
+  useEffect(() => {
+    // Check if current user already has a review for this destination
+    if (user && reviews.length > 0) {
+      const userReview = reviews.find(
+        review => review.username === user.username
+      );
+      if (userReview) {
+        setExistingReview(userReview);
+        // Pre-fill form with existing review data
+        setNewReview(userReview.review_detail || '');
+        setRatings({
+          c1: userReview.rating_c1 || 0,
+          c2: userReview.rating_c2 || 0,
+          c4: userReview.rating_c4 || 0,
+          c6: userReview.rating_c6 || 0,
+          c7: userReview.rating_c7 || 0
+        });
+      }
+    }
+  }, [user, reviews]);
 
   const loadReviews = async () => {
     try {
@@ -98,7 +121,8 @@ const ApiReviewSection: React.FC<ReviewSectionProps> = ({ locationId }) => {
     }
 
     try {
-      await reviewAPI.create({
+      //await reviewAPI.create({
+      const reviewData = {
         destination_id: parseInt(locationId),
         review_detail: newReview.trim(),
         rating_c1: ratings.c1,
@@ -106,20 +130,33 @@ const ApiReviewSection: React.FC<ReviewSectionProps> = ({ locationId }) => {
         rating_c4: ratings.c4,
         rating_c6: ratings.c6,
         rating_c7: ratings.c7
-      });
+      // });
 
-      toast.success('Ulasan berhasil ditambahkan!');
-      setNewReview('');
-      setRatings({
-        c1: 0,
-        c2: 0,
-        c4: 0,
-        c6: 0,
-        c7: 0
-      });
+      // toast.success('Ulasan berhasil ditambahkan!');
+      // setNewReview('');
+      // setRatings({
+      //   c1: 0,
+      //   c2: 0,
+      //   c4: 0,
+      //   c6: 0,
+      //   c7: 0
+      // });
+      };
+
+      if (existingReview && isEditMode) {
+        // Update existing review
+        await reviewAPI.update(existingReview.review_id, reviewData);
+        toast.success('Ulasan berhasil diperbarui!');
+        setIsEditMode(false);
+      } else {
+        // Create new review
+        await reviewAPI.create(reviewData);
+        toast.success('Ulasan berhasil ditambahkan!');
+      }
       loadReviews(); // Reload reviews
     } catch (error) {
-      toast.error('Gagal menambahkan ulasan');
+      //toast.error('Gagal menambahkan ulasan');
+      toast.error(existingReview ? 'Gagal memperbarui ulasan' : 'Gagal menambahkan ulasan');
       console.error('Failed to submit review:', error);
     }
   };
@@ -211,7 +248,7 @@ const ApiReviewSection: React.FC<ReviewSectionProps> = ({ locationId }) => {
       {isAuthenticated && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
+            {/* <CardTitle className="flex items-center space-x-2">
               <MessageSquare className="w-5 h-5" />
               <span>Tulis Ulasan Anda</span>
             </CardTitle>
@@ -241,7 +278,74 @@ const ApiReviewSection: React.FC<ReviewSectionProps> = ({ locationId }) => {
               className="bg-bali-gradient hover:opacity-90"
             >
               Kirim Ulasan
-            </Button>
+            </Button> */}
+            <CardTitle className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                {existingReview ? <Edit2 className="w-5 h-5" /> : <MessageSquare className="w-5 h-5" />}
+                <span>{existingReview ? 'Ulasan Anda' : 'Tulis Ulasan Anda'}</span>
+              </div>
+              {existingReview && !isEditMode && (
+                <Button variant="outline" size="sm" onClick={() => setIsEditMode(true)}>
+                  Edit Ulasan
+                </Button>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {existingReview && !isEditMode ? (
+              // Show existing review summary
+              <div className="p-4 border rounded-lg bg-muted/50">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-muted-foreground">
+                    Ditulis pada {new Date(existingReview.created_at).toLocaleDateString('id-ID', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric'
+                    })}
+                  </span>
+                </div>
+                <p className="text-foreground mb-3">{existingReview.review_detail}</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                  
+                </div>
+              </div>
+            ) : (
+              // Show edit form
+              <>
+                <div className="space-y-4">
+                  <h4 className="font-medium">Beri Rating untuk Setiap Kriteria:</h4>
+                  {CRITERIA.map((criteria) => (
+                    <div key={criteria.code} className="p-4 border rounded-lg bg-muted/30">
+                      {renderCriteriaStars(criteria, true)}
+                    </div>
+                  ))}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Ulasan Detail:</label>
+                  <Textarea
+                    placeholder="Bagikan pengalaman Anda tentang tempat wisata ini..."
+                    value={newReview}
+                    onChange={(e) => setNewReview(e.target.value)}
+                    rows={4}
+                  />
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={handleSubmitReview}
+                    className="bg-bali-gradient hover:opacity-90"
+                  >
+                    {existingReview ? 'Simpan Perubahan' : 'Kirim Ulasan'}
+                  </Button>
+                  {existingReview && isEditMode && (
+                    <Button variant="outline" onClick={() => setIsEditMode(false)}>
+                      Batal
+                    </Button>
+                  )}
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
       )}
