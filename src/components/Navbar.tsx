@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onRegisterClick, onDashbo
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
             <img
-              src="/public/logo.png"
+              src="https://res.cloudinary.com/dza0skmce/image/upload/v1765416245/logo_lig8ld.png"
               alt="Logo SPK-Wisata"
               className="w-8 h-8 rounded-lg object-cover"
             />
