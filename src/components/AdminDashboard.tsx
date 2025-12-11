@@ -25,7 +25,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         setIsLoading(true);
         const [destinationsData, reviewsData] = await Promise.all([
           destinationAPI.getAll(),
-          reviewAPI.getAll()
+          reviewAPI.getAllPublic()
         ]);
         setDestinations(destinationsData);
         setReviews(reviewsData);
@@ -78,7 +78,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
             <div>
               <h1 className="text-2xl font-bold mb-1">Dashboard Admin</h1>
-              <p className="opacity-90 mb-1">Selamat datang Administrator {user?.name }</p>
+              <p className="opacity-90 mb-1">Selamat datang Administrator {user?.name}</p>
               <p className="opacity-75 text-sm">
                 Kelola dan pantau sistem rekomendasi wisata Kabupaten Buleleng
               </p>
@@ -221,8 +221,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <Star
                               key={index}
                               className={`w-3 h-3 ${index < Math.round((review.rating_c1 + review.rating_c2 + review.rating_c4 + review.rating_c6 + review.rating_c7) / 5)
-                                  ? 'fill-yellow-400 text-yellow-400'
-                                  : 'text-gray-300'
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-gray-300'
                                 }`}
                             />
                           ))}

@@ -27,9 +27,14 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onRegisterClick, onDashbo
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-bali-gradient rounded-lg"></div>
+            <img
+              src="/public/logo.png"
+              alt="Logo SPK-Wisata"
+              className="w-8 h-8 rounded-lg object-cover"
+            />
+
             <h1 className="text-xl font-bold text-gray-900">
-              Wisata Buleleng
+              SPK-WISATA
             </h1>
           </div>
 

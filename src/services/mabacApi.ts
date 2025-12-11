@@ -1,4 +1,4 @@
-const MABAC_API_URL = 'http://localhost:8080/v1';
+const MABAC_API_URL = 'https://wahyu.agencyta.biz.id/v1';
 
 export interface MabacCriteria {
   name: string;
